@@ -1,5 +1,5 @@
-import {promises as fs} from fs;
-import {v4 as uuidv4} from uuid;
+import {promises as fs} from 'fs';
+import {v4 as uuidv4} from 'uuid';
 
 export class CartManager {
     constructor(){
@@ -15,14 +15,14 @@ export class CartManager {
 
     getCartProducts = async (id) => {
         const carts = await this.getCarts();
-        const cart = carts.find(c => c.id === id);
-        cart ? cart.products : console.log('No se ha encontrado el carrito')
+        const cart = carts.find(c => c.cid === id);
+       if(cart){return cart.products} else {console.log('No se ha encontrado el carrito')}
     }
 
     newCart = async () => {
         const cid = uuidv4()
 
-        newCart = {id, products:[]}
+        const newCart = {cid, products:[]}
 
         this.carts = await this.getCarts()
         this.carts.push(newCart)
@@ -35,7 +35,7 @@ export class CartManager {
 
     addProductCart = async (cart_id, product_id) => {
         const carts = await this.getCarts()
-        const index = carts.findIndex(cart => cart.id === cart_id)
+        const index = carts.findIndex(cart => cart.cid === cart_id)
 
         if(index !== -1){
             const cartProducts = await this.getCartProducts(cart_id);
