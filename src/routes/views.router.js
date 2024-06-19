@@ -17,5 +17,13 @@ homeRouter.get("/", async (req, res) => {
 });
 
 homeRouter.get("/realtimeproducts", async (req, res) => {
-    return res.status(200).render("realTimeProducts", { title: "realTimeProducts" });
+    try {
+        const products = await pM.getProducts();
+        return res.status(200).render("realTimeProducts", {
+            title: "products",
+            products: products,
+        });
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
 });

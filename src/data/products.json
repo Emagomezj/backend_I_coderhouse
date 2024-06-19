@@ -1,15 +1,1 @@
-[
-    {
-        "id": "1c8a8284-cce9-43ff-984c-ba01e09fb9c4",
-        "title": "título",
-        "description": "description",
-        "price": 10,
-        "thumbnail": [
-            "https://images.pexels.com/photos/6045258/pexels-photo-6045258.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-        ],
-        "code": "algo",
-        "stock": 20,
-        "status": false,
-        "category": "categoría"
-    }
-]
+[{"id":"1c8a8284-cce9-43ff-984c-ba01e09fb9c4","title":"título","description":"description","price":10,"thumbnail":["https://images.pexels.com/photos/6045258/pexels-photo-6045258.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"],"code":"algo","stock":20,"status":false,"category":"categoría"},{"id":"458660e6-f01b-4e89-96cc-c96b8da4cc0a","title":"ttle","description":"desc","price":122,"thumbnail":["https://images.pexels.com/photos/6045258/pexels-photo-6045258.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"],"code":"1234","stock":12,"status":true,"category":"cat1"},{"id":"9705bcec-6b29-4501-8e39-e9c10858c977","title":"ttle2","description":"desc","price":25,"thumbnail":["https://images.pexels.com/photos/6045258/pexels-photo-6045258.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"],"code":"1235","stock":3,"status":true,"category":"cat2"},{"id":"b7e05e64-e607-409a-ac5b-50e14ee3d64b","title":"ttle3","description":"desc","price":166,"thumbnail":["https://images.pexels.com/photos/6045258/pexels-photo-6045258.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"],"code":"1233","stock":12,"status":true,"category":"cat3"},{"id":"42405373-f21b-4e1c-adeb-4ba892953a62","title":"ttle4","description":"d","price":122,"thumbnail":["https://images.pexels.com/photos/6045258/pexels-photo-6045258.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"],"code":"111","stock":12,"status":true,"category":"cat4"},{"id":"5994ce27-1679-46e4-bde6-a3984bc9ec03","title":"ttle5","description":"d","price":124,"thumbnail":["https://images.pexels.com/photos/6045258/pexels-photo-6045258.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"],"code":"1111","stock":12,"status":true,"category":"cat5"},{"id":"c4f07f52-caec-406a-b23e-9638b0ac5173","title":"ttle6","description":"d","price":155,"thumbnail":["https://images.pexels.com/photos/6045258/pexels-photo-6045258.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"],"code":"1","stock":12,"status":true,"category":"cat6"},{"id":"2b9452a9-b991-44d7-aef4-6604a667ebf9","title":"ttle8","description":"d","price":1234,"thumbnail":["https://images.pexels.com/photos/6045258/pexels-photo-6045258.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"],"code":"1234","stock":123,"status":true,"category":"cat8"},{"id":"1bd8c730-4d91-452e-8960-3cb11cd0aea3","title":"ttle7","description":"d","price":1233,"thumbnail":["https://images.pexels.com/photos/6045258/pexels-photo-6045258.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"],"code":"123","stock":2,"status":true,"category":"cat7"},{"id":"050ff828-74b2-4a0c-b9b1-939cc0a879a4","title":"ttle7","description":"d","price":1233,"thumbnail":["https://images.pexels.com/photos/6045258/pexels-photo-6045258.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"],"code":"123","stock":2,"status":true,"category":"cat7"}]

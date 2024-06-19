@@ -42,7 +42,7 @@ export class ProductManager {
     }
 
     deleteProduct = async (id) => {
-        const products = this.getProducts()
+        const products = await this.getProducts()
         const index = products.findIndex(product => product.id === id)
 
         if(index !== -1){

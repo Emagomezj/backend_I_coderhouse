@@ -1,14 +1,15 @@
-<div class="contenedor">
-    <h1 class="titulo titulo-principal">Panel de Administración</h1>
+<div>
+    <h1>Panel de Administración</h1>
     <form id="addItem_form">
-        <div class="ingresoProductos__contenedor">
+        <div>
             <div>
-                <input type="text" name="file" id="file" class="file" accept="image/*" placeholder="Image" required />
+                <input type="text" name="image_input" id="image_input" class="image_input" placeholder="Image"
+                    required />
             </div>
             <div>
-                <input type="text" name="code" id="code" placeholder="Code" required />
-                <input type="text" name="category" id="category" placeholder="Category" required />
                 <input type="text" name="title" id="title" placeholder="Title" required />
+                <input type="text" name="category" id="category" placeholder="Category" required />
+                <input type="text" name="code" id="code" placeholder="Code" required />
                 <input type="number" name="price" id="price" placeholder="Price" required />
                 <input type="number" name="stock" id="stock" placeholder="Stock" required />
                 <input type="text" name="description" id="description" placeholder="Description" required />
@@ -19,24 +20,23 @@
             <input type="submit" value="Agregar" class="agregar_btn" />
         </div>
     </form>
-    <table class="table">
+    <table class="table table-striped">
         <thead>
             <tr class="categories__list">
                 <th scope="col" class="id">Id</th>
-                <th scope="col" class="code">Code</th>
                 <th scope="col" class="category">Category</th>
                 <th scope="col" class="title">Title</th>
+                <th scope="col" class="code">Code</th>
                 <th scope="col" class="thumbnail">Thumbnail</th>
                 <th scope="col" class="price">Price</th>
                 <th scope="col" class="stock">Stock</th>
-                <th scope="col" class="edit" id="edit">Edit</th>
                 <th scope="col" class="delete" id="delete">Delete</th>
             </tr>
         </thead>
-        <tbody id="tbody">
+        <tbody id="tbl_bdy">
         </tbody>
     </table>
 </div>
 
 <script src="/socket.io/socket.io.js"></script>
-<script src="main.js"></script>
+<script src="/api/public/js/main.js"></script>

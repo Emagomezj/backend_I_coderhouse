@@ -12,11 +12,13 @@ const server = express();
 
 handlebars.config(server);
 
-server.use('/',homeRouter)
-
 server.use(express.urlencoded({ extended: true }))
 server.use(express.json())
 
+server.use("/api/public/js", express.static(paths.js))
+server.use("/api/public/css", express.static(paths.css))
+
+server.use('/',homeRouter)
 server.use('/api/products', productsRouter)
 server.use('/api/carts', cartsRouter)
 
