@@ -1,0 +1,23 @@
+<section class="products__table">
+    <h1 class="titulo">Products</h1>
+    <div class="table__categories">
+        {{#each products}}
+        <div class="card" style="width: 18rem;">
+            <img class="thumbnail" src={{this.thumbnail.[0]}} alt={{this.thumbnail.[0]}} height="100px">
+            <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <p class="card-text">Id: {{this.id}}</p>
+                <p class="card-text">Code: {{this.code}}</p>
+                <p class="card-text">Category: {{this.category}}</p>
+                <p class="card-text">Title: {{this.title}}</p>
+                <p class="card-text">Price: {{this.price}}</p>
+                <p class="card-text">Stock: {{this.stock}}</p>
+                <p class="card-text">Description: {{this.description}}</p>
+
+                <a href="/realTimeProducts" class="btn btn-primary">Administrar</a>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+    <a href="/realTimeProducts"></a>
+</section>

@@ -1,7 +1,8 @@
 import { Router } from "express";
-import { productManager } from "../index.js";
+import { ProductManager } from "../controllers/productManager.js";
 
-const productsRouter = Router()
+const productManager = new ProductManager;
+export const productsRouter = Router()
 
 productsRouter.get('/', async (req,res) => {
     try{
@@ -65,5 +66,3 @@ productsRouter.delete('/:pid', async (req, res) => {
         res.send(`Error al eliminar: ${error}`);
     }
 })
-
-export {productsRouter}
