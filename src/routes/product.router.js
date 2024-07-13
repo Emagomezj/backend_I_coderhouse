@@ -17,7 +17,7 @@ productsRouter.get('/', async (req,res) => {
         }
     } catch (error){
         console.log(error);
-        res.sen(`Error al obtener: ${error}`)
+        res.send(`Error al obtener: ${error}`)
     }
 })
 
