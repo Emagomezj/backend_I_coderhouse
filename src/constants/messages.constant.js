@@ -3,6 +3,7 @@ export const ERROR_NOT_FOUND_URL = "URL no encontrada" ;
 
 export const ERROR_INVALID_ID = "ID inválido" ;
 export const ERROR_NOT_FOUND_ID = "ID no encontrado" ;
+export const ERROR_NOT_FOUND_CATEGORY = "Categoría inexistente"
 
 export const ERROR_GET_DOCUMENT = "Error al obtener documento" ;
 export const ERROR_GET_ALL_DOCUMENT = "Error al obtener documentos" ;

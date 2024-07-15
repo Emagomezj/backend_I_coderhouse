@@ -1,23 +1,24 @@
 import { Router } from "express";
-import { ProductManager } from "../controllers/productManager.js";
+import { ProductManager } from "../managers/productManager.js";
+import {ERROR_INVALID_ID,ERROR_NOT_FOUND_ID} from "../constants/messages.constant.js"
+import uploader from "../utils/uploader.js";
 
 const productManager = new ProductManager;
 export const productsRouter = Router()
 
+const errorHandler = (res, message) => {
+    if (message === ERROR_INVALID_ID) return res.status(400).json({ status: false, message: ERROR_INVALID_ID });
+    if (message === ERROR_NOT_FOUND_ID) return res.status(404).json({ status: false, message: ERROR_NOT_FOUND_ID });
+    return res.status(500).json({ status: false, message });
+};
+
 productsRouter.get('/', async (req,res) => {
     try{
-        const {limit} = req.query;
-        const products = await productManager.getProducts();
+        const productsFound = await productManager.getProducts(req.query);
 
-        if(limit){
-            const limitedProducts = products.slice(0,limit);
-            return res.json(limitedProducts);
-        } else {
-            return res.json(products);
-        }
+        res.status(200).json({ status: true, payload: productsFound });
     } catch (error){
-        console.log(error);
-        res.send(`Error al obtener: ${error}`)
+        errorHandler(res, error.message);
     }
 })
 
@@ -33,36 +34,30 @@ productsRouter.get('/:pid', async (req, res) => {
     }
 })
 
-productsRouter.post('/', async (req,res)=> {
+productsRouter.post("/", uploader.single("file"), async (req, res) => {
     try {
-        const {title, description, price, thumbnail, code, stock, status = true, category} = req.body;
-        const response = await productManager.addProduct({title, description, price, thumbnail, code, stock, status, category})
-        res.json(response)
+        const { file } = req;
+        const productCreated = await productManager.addProduct(req.body, file);
+        res.status(201).json({ status: true, payload: productCreated });
     } catch (error) {
-        console.log(error);
-        res.send(`Error al agregar: ${error}`);
+        errorHandler(res, error.message);
     }
-})
+});
 
-productsRouter.put('/:pid', (req,res) => {
-    const {pid} = req.params
+productsRouter.put("/:id", uploader.single("file"), async (req, res) => {
     try {
-        const {title, description, price, thumbnail, code, stock, status, category} = req.body;
-        const response = productManager.updateProduct(pid, {title, description, price, thumbnail, code, stock, status, category}) //revisar parametro id
-        res.json(response)
+        const { file } = req;
+        const productUpdated = await productManager.updateOneById(req.params.id, req.body, file);
+        res.status(200).json({ status: true, payload: productUpdated });
     } catch (error) {
-        console.log(error);
-        res.send(`Error al editar: ${error}`);
+        errorHandler(res, error.message);
     }
-})
-
+});
 productsRouter.delete('/:pid', async (req, res) => {
-    const {pid} = req.params
     try {
-        await productManager.deleteProduct(pid) // Revisar parametro id
-        res.send('Producto Eliminado')
+        const productDeleted = await productManager.deleteOneById(req.params.id);
+        res.status(200).json({ status: true, payload: productDeleted });
     } catch (error) {
-        console.log(error);
-        res.send(`Error al eliminar: ${error}`);
+        errorHandler(res, error.message);
     }
 })

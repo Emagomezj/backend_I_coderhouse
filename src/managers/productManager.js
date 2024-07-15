@@ -1,54 +1,176 @@
-import {promises as fs} from 'fs';
-import {v4 as uuidv4} from 'uuid';
-import path from 'path';
-import {paths} from "../utils/path.js";
+import mongoose from "mongoose";
+import ProductModel from "../models/product.model.js";
+import mongoDB from "../config/mongoose.config.js";
+import fileSystem from "../utils/fileSystem.js";
+import {
+    ERROR_INVALID_ID,
+    ERROR_NOT_FOUND_ID
+} from "../constants/messages.constant.js";
 
 export class ProductManager {
+    #productModel
+
     constructor(){
-        this.path = path.join(paths.data,'products.json');
-        this.products = []
+        this.#productModel = ProductModel;
     }
 
-    getProducts = async () => {
-        const response = await fs.readFile(this.path, 'utf-8')
-        const responseJSON = JSON.parse(response)
+    getProducts = async (paramFilters) => {
+        try {
+            console.log(paramFilters.categories)
+            const categoryFilter = () => {
+                if(paramFilters.categories){
+                        const categoryIds = paramFilters.categories.split(',').map(id => new mongoose.Types.ObjectId(id.trim()));
+                        return {categories: { $in: categoryIds }}
+                } else {return {}}
+                }
 
-        return responseJSON
-    }
+            const filter = categoryFilter() ;
 
-    addProduct = async ({title, description, price, thumbnail, code, stock, status, category}) => {
-        const id = uuidv4()
-        let newProduct = {id, title, description, price, thumbnail, code, stock, status, category}
-        this.products = await this.getProducts()
-        this.products.push(newProduct)
-        await fs.writeFile(this.path, JSON.stringify(this.products))
-        return newProduct
-    }
+            const sort = {
+                asc: { name: 1 },
+                desc: { name: -1 },
+            };
+
+            const paginationOptions = {
+                limit: paramFilters.limit ?? 10,
+                page: paramFilters.page ?? 1,
+                sort: sort[paramFilters?.sort] ?? {},
+                populate: "categories",
+                lean: true,
+            };
+
+            const productsFound = await this.#productModel.paginate(filter, paginationOptions);
+            console.log(productsFound);
+            return productsFound;
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    };
 
     getProductById = async (id) => {
-        const response = this.getProducts()
-        const product = response.find(product => product.id === id)
-        return product || console.log('Producto no encontrado')
+        try {
+            if (!mongoDB.isValidID(id)) {
+                throw new Error(ERROR_INVALID_ID);
+            }
+
+            const productFound = await this.#productModel.findById(id).populate("categories");
+
+            if (!productFound) {
+                throw new Error(ERROR_NOT_FOUND_ID);
+            }
+
+            return productFound;
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    };
+
+    addProduct = async (data, file) => {
+        try {
+            data.categories = data.categories.split(',').map(id => new mongoose.Types.ObjectId(id.trim()))
+            const productCreated = new ProductModel(data);
+            productCreated.thumbnail = file?.filename ?? null;
+
+            await productCreated.save();
+
+            return productCreated;
+        } catch (error) {
+            if (file) await fileSystem.deleteImage(file.filename);
+
+            if (error instanceof mongoose.Error.ValidationError) {
+                error.message = Object.values(error.errors)[0];
+            }
+
+            throw new Error(error.message);
+        }
+    };
+
+    addCategoryToProduct = async(id, cid) => {
+        try {
+            if (!mongoose.Types.ObjectId.isValid(id) || !mongoose.Types.ObjectId.isValid(cid)) {
+                throw new Error('Invalid ID');
+            }
+        } catch (error) {
+            
+        }
     }
 
-    updateProduct = async (id, {...data}) => {
-        const response = this.getProducts()
-        const index = response.findIndex(product => product.id === id)
+    updateOneById = async (id, data, file) => {
+        try {
+            if (!mongoose.Types.ObjectId.isValid(id)) {
+                throw new Error('Invalid ID');
+            }
 
-        if(index !== -1){
-            response[index] = {id, ...data}
-            await fs.writeFile(this.path, JSON.stringify(response))
-        } else {console.log('Producto no encontrado')}
-    }
+            const productFound = await ProductModel.findById(id);
+            if (!productFound) {
+                throw new Error('Product not found');
+            }
 
-    deleteProduct = async (id) => {
-        const products = await this.getProducts()
-        const index = products.findIndex(product => product.id === id)
+            const currentThumbnail = productFound.thumbnail;
+            const newThumbnail = file?.filename;
 
-        if(index !== -1){
-            products.splice(index, 1)
-            await fs.writeFile(this.path, JSON.stringify(products))
+            if (data.name) {
+                productFound.name = data.name;
+            }
+            if (data.surname) {
+                productFound.surname = data.surname;
+            }
+            if (data.email) {
+                productFound.email = data.email;
+            }
+            if (data.categories) {
+                productFound.categories = data.categories.split(',').map(id => {
+                    if (mongoose.Types.ObjectId.isValid(id.trim())) {
+                        return new mongoose.Types.ObjectId(id.trim());
+                    } else {
+                        throw new Error(ERROR_INVALID_ID);
+                    }
+                });
+            }
+            productFound.thumbnail = newThumbnail ?? currentThumbnail;
 
-        } else {console.log('Producto no encontrado')}
-    }
+            await productFound.save();
+
+            if (file && newThumbnail != currentThumbnail) {
+                await fileSystem.deleteImage(currentThumbnail);
+            }
+
+            return productFound;
+        } catch (error) {
+            if (file) await fileSystem.deleteImage(file.filename);
+
+            if (error instanceof mongoose.Error.ValidationError) {
+                error.message = Object.values(error.errors)[0];
+            }
+
+            throw new Error(error.message);
+        }
+    };
+
+    deleteOneById = async (id) => {
+        try {
+            if (!mongoDB.isValidID(id)) {
+                throw new Error(ERROR_INVALID_ID);
+            }
+
+            const productFound = await this.#productModel.findById(id);
+
+            if (!productFound) {
+                throw new Error(ERROR_NOT_FOUND_ID);
+            }
+
+            await this.#productModel.findByIdAndDelete(id);
+            await fileSystem.deleteImage(productFound.thumbnail);
+
+            return productFound;
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    };
 };
+
+
+
+// Buscar carts => categories y user => product para chequear integridad
+
+//const { categories } = req.query;

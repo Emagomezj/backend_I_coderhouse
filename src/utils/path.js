@@ -10,3 +10,5 @@ export const paths = {
     views: path.join(path.dirname(""), "src", "views"),
     data: path.join(path.dirname(""), "src","data")
 }
+
+export default paths

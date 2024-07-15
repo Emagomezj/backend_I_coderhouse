@@ -1,5 +1,5 @@
 import { Server } from "socket.io";
-import { ProductManager } from "../controllers/productManager.js";
+import { ProductManager } from "../managers/productManager.js";
 
 const pM = new ProductManager
 
