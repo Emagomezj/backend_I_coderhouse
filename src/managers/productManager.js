@@ -88,8 +88,9 @@ export class ProductManager {
     addCategoryToProduct = async(id, cid) => {
         try {
             if (!mongoose.Types.ObjectId.isValid(id) || !mongoose.Types.ObjectId.isValid(cid)) {
-                throw new Error('Invalid ID');
+                throw new Error(ERROR_INVALID_ID);
             }
+            
         } catch (error) {
             
         }
@@ -98,12 +99,12 @@ export class ProductManager {
     updateOneById = async (id, data, file) => {
         try {
             if (!mongoose.Types.ObjectId.isValid(id)) {
-                throw new Error('Invalid ID');
+                throw new Error(ERROR_INVALID_ID);
             }
 
             const productFound = await ProductModel.findById(id);
             if (!productFound) {
-                throw new Error('Product not found');
+                throw new Error(ERROR_NOT_FOUND_ID);
             }
 
             const currentThumbnail = productFound.thumbnail;
