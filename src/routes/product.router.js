@@ -47,12 +47,31 @@ productsRouter.post("/", uploader.single("file"), async (req, res) => {
 productsRouter.put("/:id", uploader.single("file"), async (req, res) => {
     try {
         const { file } = req;
-        const productUpdated = await productManager.updateOneById(req.params.id, req.body, file);
+        const productUpdated = await productManager.updateOneById(req.params.id, req.body.categories, file);
         res.status(200).json({ status: true, payload: productUpdated });
     } catch (error) {
         errorHandler(res, error.message);
     }
 });
+
+productsRouter.put("/:id/add", async (req,res) => {
+    try {
+        const productUpdated = await productManager.addCategoriesToProduct(req.params.id,req.body.categories);
+        res.status(200).json({status: true, payload: productUpdated})
+    } catch (error) {
+        res.send(error.message);
+    }
+})
+
+productsRouter.put("/:id/remove", async (req,res) => {
+    try {
+        const productUpdated = await productManager.removeCategoryFromProduct(req.params.id,req.body.categories);
+        res.status(200).json({status: true, payload: productUpdated})
+    } catch (error) {
+        res.send(error.message)
+    }
+})
+
 productsRouter.delete('/:pid', async (req, res) => {
     try {
         const productDeleted = await productManager.deleteOneById(req.params.id);

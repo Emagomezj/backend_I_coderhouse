@@ -16,7 +16,6 @@ export class ProductManager {
 
     getProducts = async (paramFilters) => {
         try {
-            console.log(paramFilters.categories)
             const categoryFilter = () => {
                 if(paramFilters.categories){
                         const categoryIds = paramFilters.categories.split(',').map(id => new mongoose.Types.ObjectId(id.trim()));
@@ -85,20 +84,133 @@ export class ProductManager {
         }
     };
 
-    addCategoryToProduct = async(id, cid) => {
+    addCategoriesToProduct = async(id, categories) => {
+        id = new mongoose.Types.ObjectId(id)
+
         try {
-            if (!mongoose.Types.ObjectId.isValid(id) || !mongoose.Types.ObjectId.isValid(cid)) {
+            if (!mongoDB.isValidID(id)) {
                 throw new Error(ERROR_INVALID_ID);
             }
-            
+            const productFound = await this.#productModel.findById(id)
+
+            if(!productFound) {
+                throw new Error(ERROR_NOT_FOUND_ID);
+            }
+
+            if(categories.length === 24){
+
+                const category = new mongoose.Types.ObjectId(categories.trim())
+                console.log(category)
+                if(!mongoDB.isValidID(category)){
+                    throw new Error(ERROR_INVALID_ID);
+                }
+
+                const productFound = await this.#productModel.findByIdAndUpdate(
+                    id,
+                    { $addToSet: { categories: category } },
+                    { new: true }
+                ).populate("categories");
+
+
+            return productFound
+
+            }else{
+
+               const validCategoryIDs = categories.map(id => {
+                    if (!mongoDB.isValidID(new mongoose.Types.ObjectId(id))) {
+                        throw new Error(ERROR_INVALID_ID);
+                    }
+                    return new mongoose.Types.ObjectId(id);
+                    })
+
+                const productFound = await this.#productModel.findByIdAndUpdate(
+                        id,
+                        { $addToSet: { categories: { $each: validCategoryIDs } } },
+                        { new: true }
+                    ).populate("categories");
+
+
+                return productFound
+            }
         } catch (error) {
-            
+
+            if (file) await fileSystem.deleteImage(file.filename);
+
+            if (error instanceof mongoose.Error.ValidationError) {
+                error.message = Object.values(error.errors)[0];
+            }
+
+            throw new Error(error.message);
+        }
+    }
+
+    removeCategoryFromProduct = async (id,categories) => {
+        try {
+
+            id = new mongoose.Types.ObjectId(id)
+            if (!mongoDB.isValidID(id)) {
+                throw new Error(ERROR_INVALID_ID);
+            }
+
+            let validCategoryIDs
+
+            if(categories.length === 24){
+
+                validCategoryIDs = new mongoose.Types.ObjectId(categories)
+
+                if(!mongoDB.isValidID(validCategoryIDs)){
+                    throw new Error(ERROR_INVALID_ID)
+                }
+
+                const updatedProduct = await this.#productModel.findByIdAndUpdate(
+                        id,
+                        { $pull: { categories: validCategoryIDs } },
+                        { new: true }
+                    ).populate("categories");
+
+                if (!updatedProduct) {
+                    throw new Error(ERROR_NOT_FOUND_ID);
+                }
+
+                return updatedProduct;
+            } else {
+
+                validCategoryIDs = categories.map(id => {
+                    if (!mongoDB.isValidID(new mongoose.Types.ObjectId(id))) {
+                        throw new Error(ERROR_INVALID_ID);
+                    }
+                    return new mongoose.Types.ObjectId(id);
+                    })
+
+                const updatedProduct = await this.#productModel.findByIdAndUpdate(
+                        id,
+                        { $pull: { categories: { $in: validCategoryIDs } } },
+                        { new: true }
+                    ).populate("categories");
+
+                if (!updatedProduct) {
+                        throw new Error(ERROR_NOT_FOUND_ID);
+                    }
+
+                return updatedProduct;
+            }
+
+        } catch (error) {
+
+            if (file) await fileSystem.deleteImage(file.filename);
+
+            if (error instanceof mongoose.Error.ValidationError) {
+                error.message = Object.values(error.errors)[0];
+            }
+
+            throw new Error(error.message);
         }
     }
 
     updateOneById = async (id, data, file) => {
+        console.log('updateOneById')
         try {
-            if (!mongoose.Types.ObjectId.isValid(id)) {
+            if (!mongoDB.isValidID(id)) {
                 throw new Error(ERROR_INVALID_ID);
             }
 
@@ -121,7 +233,7 @@ export class ProductManager {
             }
             if (data.categories) {
                 productFound.categories = data.categories.split(',').map(id => {
-                    if (mongoose.Types.ObjectId.isValid(id.trim())) {
+                    if (mongoDB.isValidID(id.trim())) {
                         return new mongoose.Types.ObjectId(id.trim());
                     } else {
                         throw new Error(ERROR_INVALID_ID);
