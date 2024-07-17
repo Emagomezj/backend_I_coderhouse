@@ -3,13 +3,11 @@
     <form id="addItem_form">
         <div>
             <div>
-                <input type="text" name="image_input" id="image_input" class="image_input" placeholder="Image"
-                    required />
+                <input type="file" id="file" required>
             </div>
             <div>
                 <input type="text" name="title" id="title" placeholder="Title" required />
                 <input type="text" name="category" id="category" placeholder="Category" required />
-                <input type="text" name="code" id="code" placeholder="Code" required />
                 <input type="number" name="price" id="price" placeholder="Price" required />
                 <input type="number" name="stock" id="stock" placeholder="Stock" required />
                 <input type="text" name="description" id="description" placeholder="Description" required />
@@ -26,7 +24,6 @@
                 <th scope="col" class="id">Id</th>
                 <th scope="col" class="category">Category</th>
                 <th scope="col" class="title">Title</th>
-                <th scope="col" class="code">Code</th>
                 <th scope="col" class="thumbnail">Thumbnail</th>
                 <th scope="col" class="price">Price</th>
                 <th scope="col" class="stock">Stock</th>
@@ -39,4 +36,4 @@
 </div>
 
 <script src="/socket.io/socket.io.js"></script>
-<script src="/api/public/js/main.js"></script>
+<script src="http://localhost:8080/public/js/main.js"></script>

@@ -1,14 +1,6 @@
 import { Schema, model } from "mongoose";
 
 const cartSchema = new Schema({
-    name:{
-        type: String,
-        default: `cart_${Date.now}`,
-        uppercase: true,
-        trim: true,
-        minLength: [ 3, "El nombre debe tener al menos 3 caracteres" ],
-        maxLength: [ 25, "El nombre debe tener como máximo 25 caracteres" ],
-    },
     products:[{
         type: Schema.Types.ObjectId,
         ref: "products"
@@ -23,6 +15,17 @@ cartSchema.virtual("users", {
     localField: "_id", // Nombre del campo de referencia que esta en esta collection
     foreignField: "carts", // Nombre del campo de referencia que está en la collection externa
     justOne: true,
+});
+
+cartSchema.pre("findByIdAndDelete", async function(next) {
+    const userModel = this.model("user");
+
+    await userModel.updateMany(
+        { users: this._id },
+        { $pull: { users: this._id } },
+    );
+
+    next();
 });
 
 const CartModel = model('carts', cartSchema)

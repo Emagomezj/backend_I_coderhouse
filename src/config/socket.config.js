@@ -9,7 +9,7 @@ const config = (serverHTTP) => {
     serverSocket.on("connection", async (socket) => {
         console.log("Socket connected");
         try{
-            const products = await pM.getProducts();
+            const products = await pM.getProducts({});
             socket.emit("products",products)
         }catch(error){
             console.error(`Hemos tenido un problema al buscar los productos. Error: ${error}`);
@@ -20,8 +20,8 @@ const config = (serverHTTP) => {
         });
         socket.on("newProduct", async (product) => {
             try {
-                await pM.addProduct({ ...product });
-                socket.emit("products", await pM.getProducts());
+                await pM.addProduct(product.body, product.file);
+                socket.emit("products", await pM.getProducts(product));
             } catch (error) {
                 console.error("Error al agregar producto:", error);
                 socket.emit("productsError", { message: "Error al agregar producto" });
@@ -32,11 +32,21 @@ const config = (serverHTTP) => {
         })
         socket.on("deleteProduct", async (id) => {
             try {
-                await pM.deleteProduct(id);
-                const products = await pM.getProducts();
+                await pM.deleteOneById(id);
+                const products = await pM.getProducts({});
                 socket.emit("products", products);
             } catch (error) {
                 console.error("Error al eliminar producto:", error);
+                socket.emit("productsError", { message: "Error al eliminar producto" });
+            }
+        });
+
+        socket.on("update", async (id) => {
+            try {
+                const products = await pM.getProducts({});
+                socket.emit("products", products);
+            } catch (error) {
+                console.error("Error al actualizar los datos:", error);
                 socket.emit("productsError", { message: "Error al eliminar producto" });
             }
         });

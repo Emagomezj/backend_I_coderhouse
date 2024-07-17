@@ -40,8 +40,11 @@ export default class UserManager {
             const usersFound = await this.#userModel.paginate(filters, paginationOptions);
             console.log(usersFound);
             return usersFound;
+
         } catch (error) {
+
             throw new Error(error.message);
+
         }
     };
 
@@ -140,4 +143,6 @@ export default class UserManager {
             throw new Error(error.message);
         }
     };
+
+    
 }

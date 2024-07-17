@@ -1,0 +1,17 @@
+<section>
+    <h1>{{product.title}}</h1>
+    <div class="card" style="width: 18rem;">
+        <img class="thumbnail" src="http://localhost:8080/public/img/{{product.thumbnail}}"
+            alt="localhost:8080/public/img/{{product.thumbnail}}" height="100px">
+        <div class="card-body">
+            <p class="card-text">Id: {{product._id}}</p>
+            <p class="card-text">Category: {{product.categories}}</p>
+            <p class="card-text">Price: {{product.price}}</p>
+            <p class="card-text">Stock: {{product.stock}}</p>
+            <p class="card-text">Description: {{product.description}}</p>
+
+            <a href="/cart" class="btn btn-primary">Agregar o quitar del carrito</a>
+            <a href="/" class="btn btn-primary">Volver a inicio</a>
+        </div>
+    </div>
+</section>

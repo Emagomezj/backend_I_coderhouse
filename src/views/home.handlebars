@@ -1,22 +1,23 @@
 <section>
     <h1>Products</h1>
+    <a href="/realTimeProducts" class="btn btn-primary">Administrar productos</a>
     <div class="d-flex">
-        {{#each products}}
+        {{#each products.docs}}
         <div class="card" style="width: 18rem;">
-            <img class="thumbnail" src={{this.thumbnail.[0]}} alt={{this.thumbnail.[0]}} height="100px">
+            <img class="thumbnail" src="http://localhost:8080/public/img/{{this.thumbnail}}"
+                alt="localhost:8080/public/img/{{this.thumbnail}}" height="100px">
             <div class="card-body">
                 <h5 class="card-title">{{this.title}}</h5>
-                <p class="card-text">Id: {{this.id}}</p>
-                <p class="card-text">Code: {{this.code}}</p>
-                <p class="card-text">Category: {{this.category}}</p>
+                <p class="card-text">Id: {{this._id}}</p>
+                <p class="card-text">Category: {{this.categories}}</p>
                 <p class="card-text">Price: {{this.price}}</p>
                 <p class="card-text">Stock: {{this.stock}}</p>
                 <p class="card-text">Description: {{this.description}}</p>
 
-                <a href="/realTimeProducts" class="btn btn-primary">Administrar</a>
+                <a href="/product/{{this._id}}" class="btn btn-primary">Ver</a>
+                <a href="/cart" class="btn btn-primary">Agregar o quitar del carrito</a>
             </div>
         </div>
         {{/each}}
     </div>
-    <a href="/realTimeProducts"></a>
 </section>

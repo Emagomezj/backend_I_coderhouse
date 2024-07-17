@@ -20,7 +20,7 @@ productsRouter.get('/', async (req,res) => {
     } catch (error){
         errorHandler(res, error.message);
     }
-})
+});
 
 productsRouter.get('/:pid', async (req, res) => {
     try {
@@ -29,10 +29,10 @@ productsRouter.get('/:pid', async (req, res) => {
         return res.json(products)
     } catch (error) {
         console.log(error);
-        res.send(`Error al obtener por ID: ${error}`);
+        errorHandler(res, error.message);
 
     }
-})
+});
 
 productsRouter.post("/", uploader.single("file"), async (req, res) => {
     try {
@@ -61,7 +61,7 @@ productsRouter.put("/:id/add", async (req,res) => {
     } catch (error) {
         res.send(error.message);
     }
-})
+});
 
 productsRouter.put("/:id/remove", async (req,res) => {
     try {
@@ -70,7 +70,7 @@ productsRouter.put("/:id/remove", async (req,res) => {
     } catch (error) {
         res.send(error.message)
     }
-})
+});
 
 productsRouter.delete('/:pid', async (req, res) => {
     try {
@@ -79,4 +79,4 @@ productsRouter.delete('/:pid', async (req, res) => {
     } catch (error) {
         errorHandler(res, error.message);
     }
-})
+});

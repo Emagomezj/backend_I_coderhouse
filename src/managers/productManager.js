@@ -39,7 +39,6 @@ export class ProductManager {
             };
 
             const productsFound = await this.#productModel.paginate(filter, paginationOptions);
-            console.log(productsFound);
             return productsFound;
         } catch (error) {
             throw new Error(error.message);
@@ -48,11 +47,12 @@ export class ProductManager {
 
     getProductById = async (id) => {
         try {
+            id = new mongoose.Types.ObjectId(id.trim())
             if (!mongoDB.isValidID(id)) {
                 throw new Error(ERROR_INVALID_ID);
             }
 
-            const productFound = await this.#productModel.findById(id).populate("categories");
+            const productFound = await this.#productModel.findById(id).populate('categories').lean();
 
             if (!productFound) {
                 throw new Error(ERROR_NOT_FOUND_ID);
