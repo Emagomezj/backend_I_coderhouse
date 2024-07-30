@@ -10,8 +10,17 @@
             <p class="card-text">Stock: {{product.stock}}</p>
             <p class="card-text">Description: {{product.description}}</p>
 
-            <a href="/cart" class="btn btn-primary">Agregar o quitar del carrito</a>
+            <button id={{product._id}} class="btn_add btn btn-primary">Agregar o quitar del carrito</button>
             <a href="/" class="btn btn-primary">Volver a inicio</a>
         </div>
     </div>
 </section>
+<script>
+    document.querySelector(".btn_add").addEventListener("click", function () {
+        const cid = prompt('Ingrese el id del cart')
+        const pid = this.id;
+        if (!cid) { return alert('No ha ingresado ningun carrito') }
+        window.location.pathname = `/cart/${cid}/add/${pid}`
+
+    })
+</script>

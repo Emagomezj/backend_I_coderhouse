@@ -2,10 +2,12 @@
 const params = new URLSearchParams(window.location.search);
 const query = Object.fromEntries(params.entries());
 
+
 const SOCKET = io({
     query: {type: "products",
-        query}
+        params: JSON.stringify(query)}
 });
+
 const FORM = document.getElementById("addItem_form");
 const pageControllers = document.getElementById("pageControllers")
 
@@ -86,12 +88,12 @@ SOCKET.on("products", (products) => {
         b.addEventListener("click",function(){
             const pid = this.getAttribute("id")
             const cart = document.getElementById("cart").value
-            window.location.pathname = `/cart/${cart}/add/${pid}`
+            window.location.href = `http://localhost:8080/cart/${cart}/add/${pid}`
         })
     })
     document.getElementById("btn_verCart").addEventListener("click", () => {
         const cart = document.getElementById("cart").value
-        window.location.pathname = `/cart/${cart}`
+        window.location.href = `http://localhost:8080/cart/${cart}`
     })
 });
 
@@ -172,6 +174,17 @@ SOCKET.on("products_new", (data) => {
             const id = this.getAttribute("id");
             SOCKET.emit("deleteProduct", id);
         });})
+        document.querySelectorAll(".btn_cart").forEach((b) => {
+            b.addEventListener("click",function(){
+                const pid = this.getAttribute("id")
+                const cart = document.getElementById("cart").value
+                window.location.href = `http://localhost:8080/cart/${cart}/add/${pid}`
+            })
+        })
+        document.getElementById("btn_verCart").addEventListener("click", () => {
+            const cart = document.getElementById("cart").value
+            window.location.href = `http://localhost:8080/cart/${cart}`
+        })
 });
 SOCKET.on("products_del", (data) => {
     Swal.fire({
@@ -250,6 +263,17 @@ SOCKET.on("products_del", (data) => {
             const id = this.getAttribute("id");
             SOCKET.emit("deleteProduct", id);
         });})
+        document.querySelectorAll(".btn_cart").forEach((b) => {
+            b.addEventListener("click",function(){
+                const pid = this.getAttribute("id")
+                const cart = document.getElementById("cart").value
+                window.location.href = `http://localhost:8080/cart/${cart}/add/${pid}`
+            })
+        })
+        document.getElementById("btn_verCart").addEventListener("click", () => {
+            const cart = document.getElementById("cart").value
+            window.location.href = `http://localhost:8080/cart/${cart}`
+        })
 });
 
 
@@ -271,10 +295,10 @@ const createControllers = (products) => {
         `
     } else if (products.hasPrevPage || products.hasNextPage) {
         const btn = products.prevPage ?? products.nextPage
-        let btn_name = ''
-        btn === products.prevPage ? btn_name = 'Anterior' : btn_name = 'Siguiente'
+        let btn_name = {}
+        btn === products.prevPage ? btn_name = {btn: 'Anterior', page: products.prevPage} : btn_name = {btn:'Siguiente',page: products.nextPage}
         pageControllers.innerHTML = `
-        <a href="/realtimeproducts?page=${btn}"><button>${btn_name}</button></a>
+        <a href="/realtimeproducts?page=${btn_name.page}"><button>${btn_name.btn}</button></a>
         <a href="/realtimeproducts?page=${products.page}&sort=asc"><button>⬇ </button></a>
         <a href="/realtimeproducts?page=${products.page}&sort=desc"><button>⬆ </button></a>
                 <a href="/realtimeproducts?page=${products.page}"><button>⬌</button></a>

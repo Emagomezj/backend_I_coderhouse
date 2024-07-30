@@ -225,24 +225,16 @@ export class ProductManager {
             const currentThumbnail = productFound.thumbnail;
             const newThumbnail = file?.filename;
 
-            if (data.name) {
-                productFound.name = data.name;
+            if (data.title) {
+                productFound.title = data.title;
             }
-            if (data.surname) {
-                productFound.surname = data.surname;
+            if (data.stock) {
+                productFound.stock = data.stock;
             }
-            if (data.email) {
-                productFound.email = data.email;
+            if (data.price) {
+                productFound.price = data.price;
             }
-            if (data.categories) {
-                productFound.categories = data.categories.split(',').map(id => {
-                    if (mongoDB.isValidID(id.trim())) {
-                        return new mongoose.Types.ObjectId(id.trim());
-                    } else {
-                        throw new Error(ERROR_INVALID_ID);
-                    }
-                });
-            }
+
             productFound.thumbnail = newThumbnail ?? currentThumbnail;
 
             await productFound.save();

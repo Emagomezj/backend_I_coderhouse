@@ -32,7 +32,7 @@ homeRouter.get("/", async (req, res) => {
         const catArray =[{id:"ninguna", name:"Ninguna"}]
         categories.map( category => catArray.push({id: category._id.toString(), name: category.name}))
         const cartArray = []
-        carts.forEach(c => cartArray.push({id: `${c._id}`}))
+        carts.forEach(c => cartArray.push({id: `${c._id}`}));
         return res.status(200).render("home", {
             title: "Products",
             products: products,
@@ -47,7 +47,7 @@ homeRouter.get("/", async (req, res) => {
 
 homeRouter.get("/realtimeproducts", async (req, res) => {
     try {
-        const carts = await cartManager.getCarts()
+        const carts = await cartManager.getCarts(req.query)
         const products = await pM.getProducts(req.query);
         const cartArray = []
         carts.forEach(c => cartArray.push({id: `${c._id}`}))

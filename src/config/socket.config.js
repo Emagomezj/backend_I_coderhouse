@@ -13,7 +13,7 @@ const config = (serverHTTP) => {
         const query = socket.handshake.query;
         try{
             if(query.type === "products"){
-                const products = await pM.getProducts( query.query);
+                const products = await pM.getProducts( JSON.parse(query.params));
                 socket.emit("products",products)
             }
             if(query.type === "carts"){
