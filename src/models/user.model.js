@@ -49,6 +49,16 @@ const userSchema = new Schema ({
     timestamps: true, // Añade timestamps para generar createdAt y updatedAt
 })
 
+userSchema.pre("findByIdAndDelete", async function (next) {
+    const user = await this.model.findOne(this.getFilter()).populate("carts");
+
+    if (user.carts && user.carts.length > 0) {
+        await CartModel.deleteMany({ _id: { $in: user.carts } });
+    }
+
+    next();
+});
+
 // Índice compuesto para nombre y apellido
 userSchema.index({ surname: 1, name: 1 }, { name: "idx_surname_name" });
 

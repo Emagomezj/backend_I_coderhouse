@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 import UserModel from "../models/user.model.js";
 import mongoDB from "../config/mongoose.config.js";
 import fileSystem from "../utils/fileSystem.js";
-
 import {
     ERROR_INVALID_ID,
     ERROR_NOT_FOUND_ID,
@@ -10,7 +9,6 @@ import {
 
 export default class UserManager {
     #userModel;
-
     constructor () {
         this.#userModel = UserModel;
     }
@@ -28,17 +26,15 @@ export default class UserManager {
                 asc: { name: 1 },
                 desc: { name: -1 },
             };
-
             const paginationOptions = {
-                limit: paramFilters.limit ?? 10,
-                page: paramFilters.page ?? 1,
+                limit: paramFilters?.limit ?? 10,
+                page: paramFilters?.page ?? 1,
                 sort: sort[paramFilters?.sort] ?? {},
                 populate: "carts",
                 lean: true,
             };
 
             const usersFound = await this.#userModel.paginate(filters, paginationOptions);
-            console.log(usersFound);
             return usersFound;
 
         } catch (error) {
@@ -87,7 +83,8 @@ export default class UserManager {
 
     updateOneById = async (id, data, file) => {
         try {
-            if (!mongoDB.isValidID(id)) {
+            const id_ob = new mongoose.Types.ObjectId(id)
+            if (!mongoDB.isValidID(id_ob)) {
                 throw new Error(ERROR_INVALID_ID);
             }
 
@@ -99,11 +96,20 @@ export default class UserManager {
                 throw new Error(ERROR_NOT_FOUND_ID);
             }
 
+            if(data.name){
             userFound.name = data.name;
+            }
+            if(data.surname){
             userFound.surname = data.surname;
+            }
+            if(data.email){
             userFound.email = data.email;
-            userFound.thumbnail = newThumbnail ?? currentThumbnail;
+            }
+            if(data.carts){
             userFound.carts = data.carts;
+            }
+
+            userFound.thumbnail = newThumbnail ?? currentThumbnail;
 
             await userFound.save();
 
@@ -138,11 +144,28 @@ export default class UserManager {
             await this.#userModel.findByIdAndDelete(id);
             await fileSystem.deleteImage(userFound.thumbnail);
 
-            return userFound;
+            return 'Usuario Eliminado con Éxito';
         } catch (error) {
             throw new Error(error.message);
         }
     };
 
-    
+
+    //Esta función es solo para uso de dev, no debe utilizarse más que para fines de desarrollo, ya que no elimina los carritos
+    deleteAllCarts = async (id) => {
+        try {
+            if(!mongoDB.isValidID(id)){
+                throw new Error(ERROR_INVALID_ID)
+            }
+            const user = await this.#userModel.findById(id)
+            if(!user){
+                throw new Error(ERROR_NOT_FOUND_ID)
+            }
+            await this.#userModel.findByIdAndUpdate({_id:id},{carts:[]})
+            const response = this.#userModel.findById(id)
+            return response;
+        } catch (error) {
+            throw new Error(error.message)
+        }
+    }
 }

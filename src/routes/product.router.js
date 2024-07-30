@@ -3,6 +3,7 @@ import { ProductManager } from "../managers/productManager.js";
 import {ERROR_INVALID_ID,ERROR_NOT_FOUND_ID} from "../constants/messages.constant.js"
 import uploader from "../utils/uploader.js";
 
+
 const productManager = new ProductManager;
 export const productsRouter = Router()
 

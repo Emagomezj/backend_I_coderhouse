@@ -1,13 +1,49 @@
 <div>
     <h1>Panel de Administración</h1>
-    <form id="addItem_form">
+    <section>
+        <div>
+            <div id="pageControllers">
+                {{#if products.hasPrevPage}}
+                <a href="/realtimeproducts?page={{products.prevPage}}"><button>Anterior</button></a>
+                {{/if}}
+
+                {{#if products.hasNextPage}}
+                <a href="/realtimeproducts?page={{products.nextPage}}{{products.sort}}"><button>Siguiente</button></a>
+                {{/if}}
+
+                <a href="/realtimeproducts?page={{products.page}}&sort=desc"><button>⬇ {{products.page}}</button></a>
+                <a href="/realtimeproducts?page={{products.page}}&sort=asc"><button>⬆ {{products.page}}</button></a>
+                <a href="/realtimeproducts?page={{products.page}}"><button>⬌</button></a>
+
+                <p>
+                    Página <span id="page">{{products.page}}</span> de <span
+                        id="total-pages">{{products.totalPages}}</span>
+                    <br>
+                    <span>{{products.totalDocs}}</span> Documentos
+                </p>
+
+            </div>
+            <label for="carts">Carrito:</label>
+            <select id="cart" name="carts">
+                {{#each carts}}
+                <option value={{this.id}}>{{this.id}}</option>
+                {{/each}}
+            </select>
+            <button id="btn_verCart">Ver Carrito</button>
+            <div>
+                <a href="/" class="btn btn-primary">Volver a inicio</a>
+            </div>
+        </div>
+    </section>
+
+    <form id="addItem_form" enctype="multipart/form-data">
         <div>
             <div>
-                <input type="file" id="file" required>
+                <input name="file" type="file" id="file" required>
             </div>
             <div>
                 <input type="text" name="title" id="title" placeholder="Title" required />
-                <input type="text" name="category" id="category" placeholder="Category" required />
+                <input type="text" name="categories" id="categories" placeholder="Category/ies" required />
                 <input type="number" name="price" id="price" placeholder="Price" required />
                 <input type="number" name="stock" id="stock" placeholder="Stock" required />
                 <input type="text" name="description" id="description" placeholder="Description" required />
@@ -22,11 +58,13 @@
         <thead>
             <tr class="categories__list">
                 <th scope="col" class="id">Id</th>
-                <th scope="col" class="category">Category</th>
+                <th scope="col" class="categories">categories</th>
                 <th scope="col" class="title">Title</th>
                 <th scope="col" class="thumbnail">Thumbnail</th>
                 <th scope="col" class="price">Price</th>
                 <th scope="col" class="stock">Stock</th>
+                <th scope="col" class="agregar">Agregar</th>
+                <th scope="col" class="modificar">Modificar</th>
                 <th scope="col" class="delete" id="delete">Delete</th>
             </tr>
         </thead>
@@ -35,5 +73,6 @@
     </table>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script src="http://localhost:8080/public/js/main.js"></script>

@@ -1,0 +1,29 @@
+<h1>Quitar Producto del carrito</h1>
+
+<p>Producto:{{cartProduct.product.title}}</p>
+<p>"Cantidad actual: {{cartProduct.quantity}}"</p>
+
+<button id="btn_del">Quitar producto del carrito</button>
+
+
+<script>
+    const path = window.location.pathname;
+    const pathSegments = path.split('/');
+    const cid = pathSegments[2];
+    const pid = pathSegments[4]
+    const btn_del = document.getElementById("btn_del")
+    btn_del.addEventListener("click", (e) => {
+        fetch(`http://localhost:8080/api/carts/${cid}/delete/${pid}`, {
+            method: 'PUT'
+        }).then(response => {
+            if (response.ok) {
+                window.location.pathname = `/cart/${cid}`
+            } else {
+                throw new Error('Error en la solicitud DELETE');
+            }
+        })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    })
+</script>

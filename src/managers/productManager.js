@@ -26,8 +26,8 @@ export class ProductManager {
             const filter = categoryFilter() ;
 
             const sort = {
-                asc: { name: 1 },
-                desc: { name: -1 },
+                asc: { title: 1 },
+                desc: { title: -1 },
             };
 
             const paginationOptions = {
@@ -37,7 +37,6 @@ export class ProductManager {
                 populate: "categories",
                 lean: true,
             };
-
             const productsFound = await this.#productModel.paginate(filter, paginationOptions);
             return productsFound;
         } catch (error) {
@@ -65,8 +64,14 @@ export class ProductManager {
     };
 
     addProduct = async (data, file) => {
+
         try {
-            data.categories = data.categories.split(',').map(id => new mongoose.Types.ObjectId(id.trim()))
+            if(data.categories.length === 24){
+                data.categories = new mongoose.Types.ObjectId(data.categories)
+            } else {
+                data.categories = data.categories.split(',').map(id => new mongoose.Types.ObjectId(id.trim()))
+            }
+
             const productCreated = new ProductModel(data);
             productCreated.thumbnail = file?.filename ?? null;
 
@@ -100,7 +105,6 @@ export class ProductManager {
             if(categories.length === 24){
 
                 const category = new mongoose.Types.ObjectId(categories.trim())
-                console.log(category)
                 if(!mongoDB.isValidID(category)){
                     throw new Error(ERROR_INVALID_ID);
                 }
@@ -208,7 +212,6 @@ export class ProductManager {
     }
 
     updateOneById = async (id, data, file) => {
-        console.log('updateOneById')
         try {
             if (!mongoDB.isValidID(id)) {
                 throw new Error(ERROR_INVALID_ID);

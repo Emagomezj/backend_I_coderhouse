@@ -1,10 +1,17 @@
 import { Schema, model } from "mongoose";
 
 const cartSchema = new Schema({
-    products:[{
-        type: Schema.Types.ObjectId,
-        ref: "products"
-    }],
+    products: [
+        {
+          product: {
+            type: Schema.Types.ObjectId,
+            ref: 'products'
+          },
+          quantity: {
+            type: Number,
+          }
+        }
+      ]
 }, {
     timestamps: true, // Añade timestamps para generar createdAt y updatedAt
     toJSON: { virtuals: true }, // Permite que los campos virtuales se incluyan en el JSON.
@@ -21,8 +28,8 @@ cartSchema.pre("findByIdAndDelete", async function(next) {
     const userModel = this.model("user");
 
     await userModel.updateMany(
-        { users: this._id },
-        { $pull: { users: this._id } },
+        { _id: this._id },
+        { $pull: { carts: this._id } },
     );
 
     next();

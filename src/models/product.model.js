@@ -50,8 +50,8 @@ productSchema.pre("findByIdAndDelete", async function(next) {
     const cartModel = this.model("cart");
 
     await cartModel.updateMany(
-        { carts: this._id },
-        { $pull: { carts: this._id } },
+        { products: this._id },
+        { $pull: { products: this._id } },
     );
 
     next();

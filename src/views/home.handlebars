@@ -1,5 +1,50 @@
 <section>
     <h1>Products</h1>
+    <section>
+        <div>
+            <div id="pageControllers">
+                {{#if products.hasPrevPage}}
+                <a href="/?page={{products.prevPage}}"><button>Anterior</button></a>
+                {{/if}}
+
+                {{#if products.hasNextPage}}
+                <a href="{{url}}&page={{products.nextPage}}{{products.sort}}"><button>Siguiente</button></a>
+                {{/if}}
+
+                <a href="{{url}}&page={{products.page}}&sort=desc"><button>⬇ {{products.page}}</button></a>
+                <a href="{{url}}&page={{products.page}}&sort=asc"><button>⬆ {{products.page}}</button></a>
+                <a href="{{url}}&page={{products.page}}"><button>⬌</button></a>
+
+                <p>
+                    Página <span id="page">{{products.page}}</span> de <span
+                        id="total-pages">{{products.totalPages}}</span>
+                    <br>
+                    <span>{{products.totalDocs}}</span> Documentos
+                </p>
+
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    Category
+                </button>
+                <ul id="cat_options" class="dropdown-menu">
+                    {{#each catArray}}
+                    <li id="category_opt" class="dropdown-item" data-value="{{this.id}}" style="cursor: pointer">
+                        {{this.name}}
+                    </li>
+                    {{/each}}
+                </ul>
+            </div>
+        </div>
+        <label for="carts">Carrito:</label>
+        <select id="cart" name="carts">
+            {{#each carts}}
+            <option value={{this.id}}>{{this.id}}</option>
+            {{/each}}
+        </select>
+        <button id="btn_verCart">Ver Carrito</button>
+    </section>
     <a href="/realTimeProducts" class="btn btn-primary">Administrar productos</a>
     <div class="d-flex">
         {{#each products.docs}}
@@ -9,15 +54,16 @@
             <div class="card-body">
                 <h5 class="card-title">{{this.title}}</h5>
                 <p class="card-text">Id: {{this._id}}</p>
-                <p class="card-text">Category: {{this.categories}}</p>
+                <p class="card-text">Categories: {{this.categoriesString}}</p>
                 <p class="card-text">Price: {{this.price}}</p>
                 <p class="card-text">Stock: {{this.stock}}</p>
                 <p class="card-text">Description: {{this.description}}</p>
 
                 <a href="/product/{{this._id}}" class="btn btn-primary">Ver</a>
-                <a href="/cart" class="btn btn-primary">Agregar o quitar del carrito</a>
+                <button id={{this._id}} class="btn_agregar btn btn-primary">Agregar al carrito</button>
             </div>
         </div>
         {{/each}}
     </div>
 </section>
+<script src="http://localhost:8080/public/js/home.js"></script>

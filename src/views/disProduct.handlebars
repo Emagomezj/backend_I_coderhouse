@@ -1,0 +1,38 @@
+<h1>Disminuir Producto del carrito</h1>
+
+<p>Producto:{{cartProduct.product.title}}</p>
+<p>Stock:{{cartProduct.product.stock}}</p>
+<p>"Cantidad actual: {{cartProduct.quantity}}"</p>
+<label for="cantidad">Cantidad a remover: </label>
+<input id="quantity" name="cantidad" type="number" min="1" value="1">
+<input id="btn_agregar" type="submit" value="Remover">
+
+<script>
+    const path = window.location.pathname;
+    const pathSegments = path.split('/');
+    const cid = pathSegments[2];
+    const pid = pathSegments[4]
+    btn_agregar.addEventListener("click", (e) => {
+        e.preventDefault();
+        const btn_agregar = document.getElementById("btn_agregar")
+        const quantity = document.getElementById("quantity")
+        const cantidad = quantity.value;
+        fetch(`http://localhost:8080/api/carts/${cid}/remove/${pid}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ "quantity": cantidad })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status) {
+                    window.location.pathname = `/cart/${cid}`
+                } else { throw new Error("No se ha podido completar la operacion") }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            })
+
+    });
+</script>

@@ -1,0 +1,23 @@
+<h1>Cart Administration</h1>
+<h2>Cart: {{cart._id}}</h2>
+<button id="btn_hme">Volver a Home</button>
+<button id="btn_flush">Terminar Compra/Vaciar Carrito</button>
+<table class="table table-striped">
+    <thead>
+        <tr class="cart__list">
+            <th scope="col" class="id">Id</th>
+            <th scope="col" class="title">Title</th>
+            <th scope="col" class="price">Price</th>
+            <th scope="col" class="stock">Stock</th>
+            <th scope="col" class="quantity">Cantidad</th>
+            <th scope="col" class="add">Agregar</th>
+            <th scope="col" class="remove">Disminuir</th>
+            <th scope="col" class="delete" id="delete">Quitar</th>
+        </tr>
+    </thead>
+    <tbody id="tbl_bdy">
+    </tbody>
+</table>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="http://localhost:8080/public/js/cartAdmin.js"></script>
