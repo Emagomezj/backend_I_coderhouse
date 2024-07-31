@@ -40,11 +40,6 @@ SOCKET.on("products", (products) => {
                     </a>
                 </td>
                 <td>
-                    <a href="#" class="btn_mod" id=${product._id}>
-                        Modificar
-                    </a>
-                </td>
-                <td>
                     <a href="#" class="btn_del" id=${product._id}>
                         Borrar
                     </a>
@@ -130,11 +125,6 @@ SOCKET.on("products_new", (data) => {
                     </a>
                 </td>
                 <td>
-                    <a href="#" class="btn_mod" id=${product._id}>
-                        Modificar
-                    </a>
-                </td>
-                <td>
                     <a href="#" class="btn_del" id=${product._id}>
                         Borrar
                     </a>
@@ -216,11 +206,6 @@ SOCKET.on("products_del", (data) => {
                 <td>
                     <a href="#" class="btn_cart" id=${product._id}>
                         Agregar
-                    </a>
-                </td>
-                <td>
-                    <a href="#" class="btn_mod" id=${product._id}>
-                        Modificar
                     </a>
                 </td>
                 <td>
